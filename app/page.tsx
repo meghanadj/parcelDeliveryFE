@@ -91,6 +91,11 @@ export default function Home() {
                     </div>
                     <div className="text-sm text-zinc-600">
                       Shipping: {order.shippingDate ?? "—"}
+                      {order.id && (
+                        <Link href={`/orders/${order.id}`} className="ml-4 text-blue-600 hover:underline">
+                          View Details
+                        </Link>
+                      )}
                     </div>
                   </div>
 

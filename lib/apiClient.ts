@@ -47,12 +47,53 @@ export class ApiClient {
   }
 
   // Orders
-  getOrders(): Promise<OrderDTO[]> {
-    return this.request<OrderDTO[]>('/api/Orders');
+  async getOrders(): Promise<OrderDTO[]> {
+    const raw = await this.request<any[]>('/api/Orders');
+    return Array.isArray(raw) ? raw.map(o => this.transformOrder(o)) : [];
   }
 
-  getOrderById(id: number): Promise<OrderDTO> {
-    return this.request<OrderDTO>(`/api/Orders/${encodeURIComponent(String(id))}`);
+  async getOrderById(id: number): Promise<OrderDTO> {
+    const raw = await this.request<any>(`/api/Orders/${encodeURIComponent(String(id))}`);
+    return this.transformOrder(raw);
+  }
+
+  private transformOrder(order: any): any {
+    if (!order) return order;
+    const parcels = Array.isArray(order.parcels) 
+      ? order.parcels.map((p: any) => this.transformParcel(p))
+      : [];
+    return { ...order, parcels };
+  }
+
+  private transformParcel(parcel: any): any {
+    if (!parcel) return parcel;
+
+    let { recipientName, recipientAddress } = parcel;
+
+    // Map nested recipient object if present
+    const r = parcel.recipient;
+    if (r) {
+      if (!recipientName) recipientName = r.name;
+      
+      // Parse addressJson string if recipientAddress is missing/incomplete
+      if (!recipientAddress && typeof r.addressJson === 'string') {
+        try {
+          const parsed = JSON.parse(r.addressJson);
+          recipientAddress = {
+            street: parsed.Street,
+            houseNo: parsed.HouseNo,
+            city: parsed.City,
+            pincode: parsed.Pincode,
+          };
+        } catch { /* ignore */ }
+      }
+    }
+
+    return {
+      ...parcel,
+      recipientName,
+      recipientAddress,
+    };
   }
 
   async postOrder(order: OrderDTO): Promise<void> {
