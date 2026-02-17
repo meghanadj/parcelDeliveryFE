@@ -68,7 +68,7 @@ export class ApiClient {
   private transformParcel(parcel: any): any {
     if (!parcel) return parcel;
 
-    let { recipientName, recipientAddress } = parcel;
+    let { recipientName, recipientAddress, weight, value, department } = parcel;
 
     // Map nested recipient object if present
     const r = parcel.recipient;
@@ -93,6 +93,7 @@ export class ApiClient {
       ...parcel,
       recipientName,
       recipientAddress,
+      department: department ?? 0
     };
   }
 

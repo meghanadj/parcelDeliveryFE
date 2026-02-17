@@ -6,6 +6,13 @@ import { useParams } from "next/navigation";
 import { defaultClient } from "@/lib/apiClient";
 import type { OrderDTO, ParcelDTO, Address } from "@/lib/apiTypes";
 
+const DEPARTMENT_NAMES: Record<number, string> = {
+  0: "General",
+  1: "Mail",
+  2: "Heavy",
+  3: "Insurance",
+};
+
 export default function OrderParcelsPage() {
   const params = useParams();
   const idParam = params?.id as string | undefined;
@@ -17,6 +24,7 @@ export default function OrderParcelsPage() {
 
   const [order, setOrder] = useState<OrderDTO | null>(null);
   const [parcels, setParcels] = useState<ParcelDTO[]>([]);
+  const [departmentFilter, setDepartmentFilter] = useState<number | "all">("all");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,8 +71,42 @@ export default function OrderParcelsPage() {
 
       {!loading && !error && (
         <div style={{ marginTop: 16 }}>
-          {parcels.length === 0 ? (
-            <p>No parcels found for this order.</p>
+          <div style={{ marginBottom: 16, display: "flex", gap: "8px" }}>
+            <button
+              style={{
+                ...filterBtnStyle,
+                background: departmentFilter === "all" ? "#000" : "#f0f0f0",
+                color: departmentFilter === "all" ? "#fff" : "#000",
+              }}
+              onClick={() => setDepartmentFilter("all")}
+            >
+              All
+            </button>
+            {Object.entries(DEPARTMENT_NAMES).map(([key, label]) => {
+              const k = Number(key);
+              return (
+                <button
+                  key={k}
+                  style={{
+                    ...filterBtnStyle,
+                    background: departmentFilter === k ? "#000" : "#f0f0f0",
+                    color: departmentFilter === k ? "#fff" : "#000",
+                  }}
+                  onClick={() => setDepartmentFilter(k)}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {parcels
+            .filter(
+              (p) =>
+                departmentFilter === "all" || p.department === departmentFilter
+            )
+            .length === 0 ? (
+            <p>No parcels found for this filter.</p>
           ) : (
             <table
               style={{
@@ -78,22 +120,34 @@ export default function OrderParcelsPage() {
                   <th style={thStyle}>#</th>
                   <th style={thStyle}>Weight</th>
                   <th style={thStyle}>Value</th>
+                  <th style={thStyle}>Department</th>
                   <th style={thStyle}>Recipient</th>
                   <th style={thStyle}>Address</th>
                 </tr>
               </thead>
               <tbody>
-                {parcels.map((p, idx) => (
-                  <tr key={idx}>
-                    <td style={tdStyle}>{idx + 1}</td>
-                    <td style={tdStyle}>{p.weight ?? "—"}</td>
-                    <td style={tdStyle}>{p.value ?? "—"}</td>
-                    <td style={tdStyle}>{p.recipientName ?? "—"}</td>
-                    <td style={tdStyle}>
-                      {formatAddress(p.recipientAddress)}
-                    </td>
-                  </tr>
-                ))}
+                {parcels
+                  .filter(
+                    (p) =>
+                      departmentFilter === "all" ||
+                      p.department === departmentFilter
+                  )
+                  .map((p, idx) => (
+                    <tr key={idx}>
+                      <td style={tdStyle}>{idx + 1}</td>
+                      <td style={tdStyle}>{p.weight ?? "—"}</td>
+                      <td style={tdStyle}>{p.value ?? "—"}</td>
+                      <td style={tdStyle}>
+                        {p.department != null
+                          ? DEPARTMENT_NAMES[p.department] ?? p.department
+                          : "—"}
+                      </td>
+                      <td style={tdStyle}>{p.recipientName ?? "—"}</td>
+                      <td style={tdStyle}>
+                        {formatAddress(p.recipientAddress)}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           )}
@@ -121,3 +175,11 @@ function formatAddress(addr?: Address) {
   const base = parts.join(", ");
   return base ? `${base} (${addr.pincode})` : String(addr.pincode ?? "—");
 }
+
+const filterBtnStyle: CSSProperties = {
+  padding: "6px 12px",
+  borderRadius: "4px",
+  border: "none",
+  cursor: "pointer",
+  fontSize: "0.9rem",
+};

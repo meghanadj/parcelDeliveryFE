@@ -18,6 +18,7 @@ export interface ParcelDTO {
   value?: number;
   recipientName?: string | null;
   recipientAddress: Address;
+  department?: number;
 }
 
 export interface OrderDTO {

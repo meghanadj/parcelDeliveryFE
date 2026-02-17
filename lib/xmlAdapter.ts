@@ -78,12 +78,14 @@ export function mapParsedXmlToOrderDTO(obj: any): OrderDTO {
 
     const weight = parseFloatSafe(p?.Weight ?? p?.weight);
     const value = parseFloatSafe(p?.Value ?? p?.value);
+    const department = parseIntSafe(p?.Department ?? p?.department) ?? 0;
 
     const out: ParcelDTO = {
       recipientName: name ?? null,
       recipientAddress,
       weight,
       value,
+      department,
     };
     return out;
   });
