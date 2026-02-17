@@ -28,6 +28,30 @@ export default function OrderParcelsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const handleApprove = async (id?: string) => {
+    if (!id) return;
+    try {
+      await defaultClient.patchParcelApproval(id, { newStatus: 1 }); // 1 = Approved
+      setParcels((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, approvalStatus: 1 } : p))
+      );
+    } catch (e) {
+      alert("Failed to approve parcel: " + e);
+    }
+  };
+
+  const handleReject = async (id?: string) => {
+    if (!id) return;
+    try {
+      await defaultClient.patchParcelApproval(id, { newStatus: 2 }); // 2 = Rejected
+      setParcels((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, approvalStatus: 2 } : p))
+      );
+    } catch (e) {
+      alert("Failed to reject parcel: " + e);
+    }
+  };
+
   useEffect(() => {
     let cancelled = false;
     async function run() {
@@ -123,6 +147,7 @@ export default function OrderParcelsPage() {
                   <th style={thStyle}>Department</th>
                   <th style={thStyle}>Recipient</th>
                   <th style={thStyle}>Address</th>
+                  {departmentFilter === 3 && <th style={thStyle}>Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -146,6 +171,44 @@ export default function OrderParcelsPage() {
                       <td style={tdStyle}>
                         {formatAddress(p.recipientAddress)}
                       </td>
+                      {departmentFilter === 3 && (
+                        <td style={tdStyle}>
+                          {!p.approvalStatus || p.approvalStatus === 0 ? (
+                            <div style={{ display: "flex", gap: "8px" }}>
+                              <button
+                                style={{
+                                  ...actionBtnStyle,
+                                  background: "#4caf50",
+                                  color: "#fff",
+                                }}
+                                onClick={() => p.id && handleApprove(p.id)}
+                              >
+                                Approve
+                              </button>
+                              <button
+                                style={{
+                                  ...actionBtnStyle,
+                                  background: "#f44336",
+                                  color: "#fff",
+                                }}
+                                onClick={() => p.id && handleReject(p.id)}
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          ) : (
+                            <span
+                              style={{
+                                color:
+                                  p.approvalStatus === 1 ? "#4caf50" : "#f44336",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {p.approvalStatus === 1 ? "Approved" : "Rejected"}
+                            </span>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
               </tbody>
@@ -182,4 +245,12 @@ const filterBtnStyle: CSSProperties = {
   border: "none",
   cursor: "pointer",
   fontSize: "0.9rem",
+};
+
+const actionBtnStyle: CSSProperties = {
+  padding: "4px 8px",
+  borderRadius: "4px",
+  border: "none",
+  cursor: "pointer",
+  fontSize: "0.8rem",
 };

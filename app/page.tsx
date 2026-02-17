@@ -4,15 +4,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { OrderDTO } from "../lib/apiTypes";
 import { defaultClient } from "../lib/apiClient";
+import { DEPARTMENT_NAMES } from "../lib/constants";
 
 type Department = number | "all";
-
-const DEPARTMENT_NAMES: Record<number, string> = {
-  0: "General",
-  1: "Fragile",
-  2: "Heavy",
-  3: "Insurance",
-};
 
 export default function Home() {
   const [orders, setOrders] = useState<OrderDTO[] | null>(null);
@@ -82,8 +76,8 @@ export default function Home() {
         <div>
           {filteredOrders && filteredOrders.length > 0 ? (
             <ul className="space-y-4">
-              {filteredOrders.map((order) => (
-                <li key={(order as any).orderNumber ?? order.id ?? Math.random()} className="border rounded p-4">
+              {filteredOrders.map((order, index) => (
+                <li key={`${order.id ?? "order"}-${index}`} className="border rounded p-4">
                   <div className="flex items-baseline justify-between">
                     <div>
                       <div className="text-sm text-zinc-500">Order Number</div>

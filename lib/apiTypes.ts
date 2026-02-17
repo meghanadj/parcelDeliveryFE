@@ -14,11 +14,13 @@ export interface Address {
 }
 
 export interface ParcelDTO {
+  id?: string;
   weight?: number;
   value?: number;
   recipientName?: string | null;
   recipientAddress: Address;
   department?: number;
+  approvalStatus?: ApprovalStatus;
 }
 
 export interface OrderDTO {
