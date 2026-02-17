@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { defaultClient } from "@/lib/apiClient";
 // ...existing code...
 
@@ -86,7 +87,12 @@ export default function UploadFilePage() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-semibold mb-4">Upload XML File</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-semibold">Upload XML File</h1>
+        <Link href="/">
+          <button type="button" className="px-3 py-1 rounded border">← Back to Home</button>
+        </Link>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium">Select XML file</label>
