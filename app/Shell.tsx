@@ -49,7 +49,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         className="content" 
         style={{ 
           marginLeft: isOpen ? "250px" : "0", 
-          padding: "20px", 
+          padding: "35px", 
           width: "100%",
           transition: "margin-left .3s" 
         }}
