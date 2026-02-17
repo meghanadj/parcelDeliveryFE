@@ -105,6 +105,7 @@ const thStyle: CSSProperties = {
   padding: "8px",
   borderBottom: "1px solid #ddd",
   background: "#f7f7f7",
+  color: "#000",
 };
 
 const tdStyle: CSSProperties = {
