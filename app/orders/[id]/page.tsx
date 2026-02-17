@@ -3,15 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { defaultClient } from "@/lib/apiClient";
-import type { OrderDTO, ParcelDTO, Address } from "@/lib/apiTypes";
+import type { OrderDTO, ParcelDTO, Address, DepartmentDTO } from "@/lib/apiTypes";
 import styles from "./page.module.css";
-
-const DEPARTMENT_NAMES: Record<number, string> = {
-  0: "General",
-  1: "Mail",
-  2: "Heavy",
-  3: "Insurance",
-};
 
 export default function OrderParcelsPage() {
   const params = useParams();
@@ -24,6 +17,7 @@ export default function OrderParcelsPage() {
 
   const [order, setOrder] = useState<OrderDTO | null>(null);
   const [parcels, setParcels] = useState<ParcelDTO[]>([]);
+  const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
   const [departmentFilter, setDepartmentFilter] = useState<number | "all">("all");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,11 +57,15 @@ export default function OrderParcelsPage() {
       setLoading(true);
       setError(null);
       try {
-        const o = await defaultClient.getOrderById(orderId);
+        const [o, depts] = await Promise.all([
+          defaultClient.getOrderById(orderId),
+          defaultClient.getDepartments()
+        ]);
         if (cancelled) return;
         setOrder(o ?? null);
         const p = (o?.parcels ?? []) as ParcelDTO[];
         setParcels(Array.isArray(p) ? p : []);
+        setDepartments(Array.isArray(depts) ? depts : []);
       } catch (e: any) {
         if (cancelled) return;
         setError(String(e?.message ?? e ?? "Failed to load order"));
@@ -80,6 +78,8 @@ export default function OrderParcelsPage() {
       cancelled = true;
     };
   }, [orderId]);
+
+  const insuranceDeptId = departments.find(d => d.name?.toLowerCase().includes("insurance"))?.id;
 
   return (
     <div className={styles.container}>
@@ -102,15 +102,15 @@ export default function OrderParcelsPage() {
             >
               All
             </button>
-            {Object.entries(DEPARTMENT_NAMES).map(([key, label]) => {
-              const k = Number(key);
+            {departments.map((dept) => {
+              const k = dept.id ?? -1;
               return (
                 <button
                   key={k}
                   className={`${styles.filterBtn} ${departmentFilter === k ? styles.filterBtnActive : styles.filterBtnInactive}`}
                   onClick={() => setDepartmentFilter(k)}
                 >
-                  {label}
+                  {dept.name ?? `Dept ${k}`}
                 </button>
               );
             })}
@@ -133,7 +133,7 @@ export default function OrderParcelsPage() {
                   <th className={styles.th}>Department</th>
                   <th className={styles.th}>Recipient</th>
                   <th className={styles.th}>Address</th>
-                  {departmentFilter === 3 && <th className={styles.th}>Actions</th>}
+                  {departmentFilter !== "all" && departmentFilter === insuranceDeptId && <th className={styles.th}>Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -150,14 +150,14 @@ export default function OrderParcelsPage() {
                       <td className={styles.td}>{p.value ?? "—"}</td>
                       <td className={styles.td}>
                         {p.department != null
-                          ? DEPARTMENT_NAMES[p.department] ?? p.department
+                          ? (departments.find(d => d.id === p.department)?.name ?? p.department)
                           : "—"}
                       </td>
                       <td className={styles.td}>{p.recipientName ?? "—"}</td>
                       <td className={styles.td}>
                         {formatAddress(p.recipientAddress)}
                       </td>
-                      {departmentFilter === 3 && (
+                      {departmentFilter !== "all" && departmentFilter === insuranceDeptId && (
                         <td className={styles.td}>
                           {!p.approvalStatus || p.approvalStatus === 0 ? (
                             <div className={styles.actions}>

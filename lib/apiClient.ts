@@ -2,6 +2,7 @@ import {
   ApprovalDTO,
   OrderDTO,
   ParcelDTO,
+  DepartmentDTO,
 } from './apiTypes';
 
 export class ApiClient {
@@ -68,6 +69,11 @@ export class ApiClient {
 
     let { recipientName, recipientAddress, weight, value, department } = parcel;
 
+    // Normalize department object to ID
+    if (department && typeof department === 'object' && 'id' in department) {
+      department = department.id;
+    }
+
     // Map nested recipient object if present
     const r = parcel.recipient;
     if (r) {
@@ -93,6 +99,11 @@ export class ApiClient {
       recipientAddress,
       department: department ?? 0
     };
+  }
+
+  async getDepartments(): Promise<DepartmentDTO[]> {
+    const raw = await this.request<any[]>('/api/Department');
+    return Array.isArray(raw) ? raw : [];
   }
 
   async postOrder(order: OrderDTO): Promise<void> {

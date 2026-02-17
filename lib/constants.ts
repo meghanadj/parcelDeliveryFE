@@ -1,6 +1,2 @@
-export const DEPARTMENT_NAMES: Record<number, string> = {
-  0: "General",
-  1: "Mail", 
-  2: "Heavy",
-  3: "Insurance",
-};
+// Constants file
+// DEPARTMENT_NAMES removed in favor of dynamic API

@@ -13,6 +13,12 @@ export interface Address {
   pincode: number;
 }
 
+export interface DepartmentDTO {
+  id?: number;
+  name?: string | null;
+  weightLimit?: number;
+}
+
 export interface ParcelDTO {
   id?: string;
   weight?: number;
