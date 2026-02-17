@@ -17,7 +17,6 @@ export class ApiClient {
       const text = await res.text().catch(() => '');
       throw new Error(`Request failed ${res.status} ${res.statusText}: ${text}`);
     }
-    // Try to parse JSON, but some endpoints may return empty body
     const contentType = res.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       const raw = await res.json();
@@ -39,7 +38,6 @@ export class ApiClient {
 
     const out: Record<string, any> = {};
     for (const k of Object.keys(input)) {
-      // skip $id and $ref metadata
       if (k === '$id' || k === '$ref') continue;
       out[k] = this.normalizeJson(input[k]);
     }
@@ -133,11 +131,7 @@ export class ApiClient {
   }
 }
 
-// Default client using NEXT_PUBLIC_API_BASE_URL if available
-// Determine base URL in order of precedence:
-// 1. `NEXT_PUBLIC_API_BASE_URL` (build-time env)
-// 2. In-browser fallback to the running backend at port 5084
-// 3. Empty string (relative)
+
 const resolvedBaseUrl =
   typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_API_BASE_URL
     ? process.env.NEXT_PUBLIC_API_BASE_URL

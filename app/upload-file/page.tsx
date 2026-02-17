@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { defaultClient } from "@/lib/apiClient";
-// ...existing code...
 
 export default function UploadFilePage() {
   const [file, setFile] = useState<File | null>(null);

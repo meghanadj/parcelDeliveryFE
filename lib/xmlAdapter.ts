@@ -35,7 +35,6 @@ function extractPincode(postalCode?: string): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-// Extracts leading numeric digits from mixed values (e.g., "ORD-123-A" -> 123)
 function extractInteger(val: any): number | undefined {
   if (val == null) return undefined;
   const digits = String(val).match(/\d+/g)?.join('');
@@ -91,7 +90,6 @@ export function mapParsedXmlToOrderDTO(obj: any): OrderDTO {
   });
 
   const order: OrderDTO = {
-    // Map uploaded file `Id` (possibly alphanumeric) to numeric orderNumber
     orderNumber: orderNumber,
     shippingDate,
     parcels,
