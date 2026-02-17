@@ -9,6 +9,7 @@ export default function Home() {
   const [orders, setOrders] = useState<OrderDTO[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -31,6 +32,12 @@ export default function Home() {
     };
   }, []);
 
+  const filteredOrders =
+    orders?.filter((order) => {
+      if (!searchQuery) return true;
+      const str = JSON.stringify(order).toLowerCase();
+      return str.includes(searchQuery.toLowerCase());
+    }) ?? [];
 
   return (
     <main className="p-8">
@@ -41,14 +48,24 @@ export default function Home() {
         </Link>
       </div>
 
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search orders..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
       {loading && <p>Loading orders…</p>}
       {error && <p className="text-red-600">Error: {error}</p>}
 
       {!loading && !error && (
         <div>
-          {orders && orders.length > 0 ? (
+          {filteredOrders.length > 0 ? (
             <ul className="space-y-4">
-              {orders.map((order, index) => (
+              {filteredOrders.map((order, index) => (
                 <li key={`${order.id ?? "order"}-${index}`} className="border rounded p-4">
                   <div className="flex items-baseline justify-between">
                     <div>
