@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { OrderDTO } from "../lib/apiTypes";
 import { defaultClient } from "../lib/apiClient";
 
@@ -49,7 +50,12 @@ export default function Home() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-semibold mb-4">Orders</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-semibold">Orders</h1>
+        <Link href="/upload-file">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded">Upload XML File</button>
+        </Link>
+      </div>
 
       <nav className="mb-6 flex gap-2">
         <button
@@ -92,7 +98,7 @@ export default function Home() {
                     <ul className="mt-3 ml-4 list-disc">
                       {order.parcels.map((p, i) => (
                         <li key={i}>
-                          {p.recipientName ?? "Recipient"} — {p.weight ?? "—"} kg — ${p.value ?? "—"} — Dept {p.department}
+                          {p.recipientName ?? "Reciπpient"} — {p.weight ?? "—"} kg — ${p.value ?? "—"} — Dept {p.department}
                         </li>
                       ))}
                     </ul>
