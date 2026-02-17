@@ -6,16 +6,10 @@ export interface ApprovalDTO {
   newStatus?: ApprovalStatus;
 }
 
-export interface City {
-  name?: string | null;
-  code?: string | null;
-  pincode?: number;
-}
-
 export interface Address {
   street?: string | null;
   houseNo?: string | null;
-  city: City;
+  city?: string | null;
   pincode: number;
 }
 
@@ -28,6 +22,7 @@ export interface ParcelDTO {
 
 export interface OrderDTO {
   id?: number;
+  orderNumber?: number;
   shippingDate?: string;
   parcels?: ParcelDTO[] | null;
 }

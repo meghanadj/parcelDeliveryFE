@@ -83,11 +83,11 @@ export default function Home() {
           {filteredOrders && filteredOrders.length > 0 ? (
             <ul className="space-y-4">
               {filteredOrders.map((order) => (
-                <li key={order.id ?? Math.random()} className="border rounded p-4">
+                <li key={(order as any).orderNumber ?? order.id ?? Math.random()} className="border rounded p-4">
                   <div className="flex items-baseline justify-between">
                     <div>
-                      <div className="text-sm text-zinc-500">Order ID</div>
-                      <div className="font-medium">#{order.id ?? "—"}</div>
+                      <div className="text-sm text-zinc-500">Order Number</div>
+                      <div className="font-medium">#{(order as any).orderNumber ?? order.id ?? "—"}</div>
                     </div>
                     <div className="text-sm text-zinc-600">
                       Shipping: {order.shippingDate ?? "—"}
@@ -98,7 +98,7 @@ export default function Home() {
                     <ul className="mt-3 ml-4 list-disc">
                       {order.parcels.map((p, i) => (
                         <li key={i}>
-                          {p.recipientName ?? "Reciπpient"} — {p.weight ?? "—"} kg — ${p.value ?? "—"} — Dept {p.department}
+                          {p.recipientName ?? "Reciπpient"} — {p.weight ?? "—"} kg — ${p.value ?? "—"} — Dept {(p as any)?.department ?? "—"}
                         </li>
                       ))}
                     </ul>

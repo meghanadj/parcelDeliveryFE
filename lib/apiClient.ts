@@ -56,11 +56,25 @@ export class ApiClient {
   }
 
   async postOrder(order: OrderDTO): Promise<void> {
-    await this.request<void>('/api/Orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(order),
-    });
+    try {
+      await this.request<void>('/api/Orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order),
+      });
+    } catch (e: any) {
+      const msg = String(e?.message || '');
+      // Fallback: some servers require a `{ request: OrderDTO }` envelope
+      if (msg.includes('request field is required')) {
+        await this.request<void>('/api/Orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ request: order }),
+        });
+        return;
+      }
+      throw e;
+    }
   }
 
   // Parcels

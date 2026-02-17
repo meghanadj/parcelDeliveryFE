@@ -138,7 +138,8 @@
             "nullable": true
           },
           "city": {
-            "$ref": "#/components/schemas/City"
+            "type": "string",
+            "nullable": true
           },
           "pincode": {
             "type": "integer",
@@ -165,28 +166,14 @@
         "type": "integer",
         "format": "int32"
       },
-      "City": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "pincode": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "OrderDTO": {
         "type": "object",
         "properties": {
           "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "orderNumber": {
             "type": "integer",
             "format": "int32"
           },

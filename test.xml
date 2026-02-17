@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<Container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>12345678</Id>
+  <ShippingDate>2016-05-29T00:00:00+02:00</ShippingDate>
+
+  <parcels>
+
+    <Parcel>
+      <Receipient>
+        <Name>Anirban Sinha</Name>
+        <Address>
+          <Street>Marijkestraat</Street>
+          <HouseNumber>28</HouseNumber>
+          <PostalCode>4744AT</PostalCode>
+          <City>Bosschenhoofd</City>
+        </Address>
+      </Receipient>
+      <Weight>0.02</Weight>
+      <Value>0.0</Value>
+    </Parcel>
+
+    <Parcel>
+      <Receipient>
+        <Name>Meghan Joshi</Name>
+        <Address>
+          <Street>Main Street</Street>
+          <HouseNumber>102</HouseNumber>
+          <PostalCode>10001</PostalCode>
+          <City>Amsterdam</City>
+        </Address>
+      </Receipient>
+      <Weight>5.5</Weight>
+      <Value>750.00</Value>
+    </Parcel>
+
+    <Parcel>
+      <Receipient>
+        <Name>Arjun Patel</Name>
+        <Address>
+          <Street>Queen's Road</Street>
+          <HouseNumber>77A</HouseNumber>
+          <PostalCode>2000AB</PostalCode>
+          <City>Rotterdam</City>
+        </Address>
+      </Receipient>
+      <Weight>12.75</Weight>
+      <Value>1500.00</Value>
+    </Parcel>
+
+  </parcels>
+</Container>
