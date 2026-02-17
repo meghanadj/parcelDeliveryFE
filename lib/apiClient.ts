@@ -106,6 +106,23 @@ export class ApiClient {
     return Array.isArray(raw) ? raw : [];
   }
 
+  async createDepartment(department: DepartmentDTO): Promise<DepartmentDTO> {
+    const raw = await this.request<any>('/api/Department', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(department),
+    });
+    return raw as DepartmentDTO;
+  }
+
+  async updateDepartment(id: number, department: DepartmentDTO): Promise<void> {
+    await this.request<void>(`/api/Department/${encodeURIComponent(String(id))}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(department),
+    });
+  }
+
   async postOrder(order: OrderDTO): Promise<void> {
     try {
       await this.request<void>('/api/Orders', {

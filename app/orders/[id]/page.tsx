@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { defaultClient } from "@/lib/apiClient";
 import type { OrderDTO, ParcelDTO, Address, DepartmentDTO } from "@/lib/apiTypes";
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function OrderParcelsPage() {
   const params = useParams();
@@ -92,7 +93,12 @@ export default function OrderParcelsPage() {
       {error && (
         <p className={styles.error}>Error: {error}</p>
       )}
+      <div className="flex items-center justify-between mb-4">
 
+        {<Link href="/">
+          <button type="button" className="px-3 py-1 rounded border">← Back to Home</button>
+        </Link>}
+      </div>
       {!loading && !error && (
         <div className={styles.content}>
           <div className={styles.filterContainer}>

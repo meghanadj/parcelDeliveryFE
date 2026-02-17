@@ -1,0 +1,104 @@
+.container {
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.loading {
+  margin-top: 12px;
+}
+
+.error {
+  margin-top: 12px;
+  color: #b00020;
+}
+
+.content {
+  margin-top: 16px;
+}
+
+.tableContainer {
+  margin-top: 24px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.th {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  background: #f7f7f7;
+  color: #000;
+}
+
+.td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.row {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.row:hover {
+  background: #f0f0f0;
+}
+
+.button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #0070f3;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.buttonSecondary {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.formContainer {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+  max-width: 400px;
+  color: #000;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+  color: black;
+}
+
+.label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
