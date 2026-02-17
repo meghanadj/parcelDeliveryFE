@@ -82,7 +82,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {order.parcels && order.parcels.length > 0 && (
+                  {/* {order.parcels && order.parcels.length > 0 && (
                     <ul className="mt-3 ml-4 list-disc">
                       {order.parcels.map((p, i) => (
                         <li key={i}>
@@ -90,7 +90,7 @@ export default function Home() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  )} */}
                 </li>
               ))}
             </ul>

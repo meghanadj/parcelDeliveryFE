@@ -159,7 +159,7 @@ export default function OrderParcelsPage() {
                       </td>
                       {departmentFilter !== "all" && departmentFilter === insuranceDeptId && (
                         <td className={styles.td}>
-                          {!p.approvalStatus || p.approvalStatus === 0 ? (
+                          {!p.approvalStatus ? (
                             <div className={styles.actions}>
                               <button
                                 className={`${styles.actionBtn} ${styles.approveBtn}`}
