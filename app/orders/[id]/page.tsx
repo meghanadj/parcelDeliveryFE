@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CSSProperties } from "react";
 import { useParams } from "next/navigation";
 import { defaultClient } from "@/lib/apiClient";
 import type { OrderDTO, ParcelDTO, Address } from "@/lib/apiTypes";
+import styles from "./page.module.css";
 
 const DEPARTMENT_NAMES: Record<number, string> = {
   0: "General",
@@ -82,26 +82,22 @@ export default function OrderParcelsPage() {
   }, [orderId]);
 
   return (
-    <div style={{ padding: "1rem 1.5rem" }}>
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>Order Parcels</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Order Parcels</h1>
       {orderId != null && (
-        <p style={{ marginTop: 4, color: "#555" }}>Order ID: {orderId}</p>
+        <p className={styles.orderId}>Order ID: {orderId}</p>
       )}
 
-      {loading && <p style={{ marginTop: 12 }}>Loading parcels…</p>}
+      {loading && <p className={styles.loading}>Loading parcels…</p>}
       {error && (
-        <p style={{ marginTop: 12, color: "#b00020" }}>Error: {error}</p>
+        <p className={styles.error}>Error: {error}</p>
       )}
 
       {!loading && !error && (
-        <div style={{ marginTop: 16 }}>
-          <div style={{ marginBottom: 16, display: "flex", gap: "8px" }}>
+        <div className={styles.content}>
+          <div className={styles.filterContainer}>
             <button
-              style={{
-                ...filterBtnStyle,
-                background: departmentFilter === "all" ? "#000" : "#f0f0f0",
-                color: departmentFilter === "all" ? "#fff" : "#000",
-              }}
+              className={`${styles.filterBtn} ${departmentFilter === "all" ? styles.filterBtnActive : styles.filterBtnInactive}`}
               onClick={() => setDepartmentFilter("all")}
             >
               All
@@ -111,11 +107,7 @@ export default function OrderParcelsPage() {
               return (
                 <button
                   key={k}
-                  style={{
-                    ...filterBtnStyle,
-                    background: departmentFilter === k ? "#000" : "#f0f0f0",
-                    color: departmentFilter === k ? "#fff" : "#000",
-                  }}
+                  className={`${styles.filterBtn} ${departmentFilter === k ? styles.filterBtnActive : styles.filterBtnInactive}`}
                   onClick={() => setDepartmentFilter(k)}
                 >
                   {label}
@@ -132,22 +124,16 @@ export default function OrderParcelsPage() {
             .length === 0 ? (
             <p>No parcels found for this filter.</p>
           ) : (
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                border: "1px solid #ddd",
-              }}
-            >
+            <table className={styles.table}>
               <thead>
                 <tr>
-                  <th style={thStyle}>#</th>
-                  <th style={thStyle}>Weight</th>
-                  <th style={thStyle}>Value</th>
-                  <th style={thStyle}>Department</th>
-                  <th style={thStyle}>Recipient</th>
-                  <th style={thStyle}>Address</th>
-                  {departmentFilter === 3 && <th style={thStyle}>Actions</th>}
+                  <th className={styles.th}>#</th>
+                  <th className={styles.th}>Weight</th>
+                  <th className={styles.th}>Value</th>
+                  <th className={styles.th}>Department</th>
+                  <th className={styles.th}>Recipient</th>
+                  <th className={styles.th}>Address</th>
+                  {departmentFilter === 3 && <th className={styles.th}>Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -159,38 +145,30 @@ export default function OrderParcelsPage() {
                   )
                   .map((p, idx) => (
                     <tr key={idx}>
-                      <td style={tdStyle}>{idx + 1}</td>
-                      <td style={tdStyle}>{p.weight ?? "—"}</td>
-                      <td style={tdStyle}>{p.value ?? "—"}</td>
-                      <td style={tdStyle}>
+                      <td className={styles.td}>{idx + 1}</td>
+                      <td className={styles.td}>{p.weight ?? "—"}</td>
+                      <td className={styles.td}>{p.value ?? "—"}</td>
+                      <td className={styles.td}>
                         {p.department != null
                           ? DEPARTMENT_NAMES[p.department] ?? p.department
                           : "—"}
                       </td>
-                      <td style={tdStyle}>{p.recipientName ?? "—"}</td>
-                      <td style={tdStyle}>
+                      <td className={styles.td}>{p.recipientName ?? "—"}</td>
+                      <td className={styles.td}>
                         {formatAddress(p.recipientAddress)}
                       </td>
                       {departmentFilter === 3 && (
-                        <td style={tdStyle}>
+                        <td className={styles.td}>
                           {!p.approvalStatus || p.approvalStatus === 0 ? (
-                            <div style={{ display: "flex", gap: "8px" }}>
+                            <div className={styles.actions}>
                               <button
-                                style={{
-                                  ...actionBtnStyle,
-                                  background: "#4caf50",
-                                  color: "#fff",
-                                }}
+                                className={`${styles.actionBtn} ${styles.approveBtn}`}
                                 onClick={() => p.id && handleApprove(p.id)}
                               >
                                 Approve
                               </button>
                               <button
-                                style={{
-                                  ...actionBtnStyle,
-                                  background: "#f44336",
-                                  color: "#fff",
-                                }}
+                                className={`${styles.actionBtn} ${styles.rejectBtn}`}
                                 onClick={() => p.id && handleReject(p.id)}
                               >
                                 Reject
@@ -198,11 +176,11 @@ export default function OrderParcelsPage() {
                             </div>
                           ) : (
                             <span
-                              style={{
-                                color:
-                                  p.approvalStatus === 1 ? "#4caf50" : "#f44336",
-                                fontWeight: 500,
-                              }}
+                              className={
+                                p.approvalStatus === 1
+                                  ? styles.statusApproved
+                                  : styles.statusRejected
+                              }
                             >
                               {p.approvalStatus === 1 ? "Approved" : "Rejected"}
                             </span>
@@ -220,38 +198,9 @@ export default function OrderParcelsPage() {
   );
 }
 
-const thStyle: CSSProperties = {
-  textAlign: "left",
-  padding: "8px",
-  borderBottom: "1px solid #ddd",
-  background: "#f7f7f7",
-  color: "#000",
-};
-
-const tdStyle: CSSProperties = {
-  padding: "8px",
-  borderBottom: "1px solid #eee",
-};
-
 function formatAddress(addr?: Address) {
   if (!addr) return "—";
   const parts = [addr.street, addr.houseNo, addr.city].filter(Boolean);
   const base = parts.join(", ");
   return base ? `${base} (${addr.pincode})` : String(addr.pincode ?? "—");
 }
-
-const filterBtnStyle: CSSProperties = {
-  padding: "6px 12px",
-  borderRadius: "4px",
-  border: "none",
-  cursor: "pointer",
-  fontSize: "0.9rem",
-};
-
-const actionBtnStyle: CSSProperties = {
-  padding: "4px 8px",
-  borderRadius: "4px",
-  border: "none",
-  cursor: "pointer",
-  fontSize: "0.8rem",
-};

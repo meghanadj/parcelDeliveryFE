@@ -1,0 +1,54 @@
+.container {
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.loading {
+  margin-top: 12px;
+}
+
+.error {
+  margin-top: 12px;
+  color: #b00020;
+}
+
+.content {
+  margin-top: 16px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.th {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  background: #f7f7f7;
+  color: #000;
+}
+
+.td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.buttonLink {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  text-decoration: none;
+  color: #333;
+}
+
+.unavailable {
+  color: #888;
+}
