@@ -35,6 +35,15 @@ function extractPincode(postalCode?: string): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+// Extracts leading numeric digits from mixed values (e.g., "ORD-123-A" -> 123)
+function extractInteger(val: any): number | undefined {
+  if (val == null) return undefined;
+  const digits = String(val).match(/\d+/g)?.join('');
+  if (!digits) return undefined;
+  const n = parseInt(digits, 10);
+  return Number.isFinite(n) ? n : undefined;
+}
+
 function toStringOrNull(val: any): string | null | undefined {
   if (val == null) return undefined;
   const s = String(val).trim();
@@ -43,7 +52,7 @@ function toStringOrNull(val: any): string | null | undefined {
 
 export function mapParsedXmlToOrderDTO(obj: any): OrderDTO {
   const container = obj?.Container ?? obj;
-  const id = parseIntSafe(container?.Id);
+  const orderNumber = extractInteger(container?.Id);
   const shippingDate = container?.ShippingDate ? String(container.ShippingDate) : undefined;
 
   const parcelsRaw = container?.parcels?.Parcel ?? container?.parcels ?? [];
@@ -80,8 +89,8 @@ export function mapParsedXmlToOrderDTO(obj: any): OrderDTO {
   });
 
   const order: OrderDTO = {
-    // Map uploaded file `Id` to `orderNumber`, leave `id` undefined for server to assign
-    orderNumber: id,
+    // Map uploaded file `Id` (possibly alphanumeric) to numeric orderNumber
+    orderNumber: orderNumber,
     shippingDate,
     parcels,
   };
