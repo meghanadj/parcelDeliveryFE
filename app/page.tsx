@@ -4,10 +4,20 @@ import React, { useEffect, useState } from "react";
 import { OrderDTO } from "../lib/apiTypes";
 import { defaultClient } from "../lib/apiClient";
 
+type Department = number | "all";
+
+const DEPARTMENT_NAMES: Record<number, string> = {
+  0: "General",
+  1: "Fragile",
+  2: "Heavy",
+  3: "Insurance",
+};
+
 export default function Home() {
   const [orders, setOrders] = useState<OrderDTO[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department>("all");
 
   useEffect(() => {
     let mounted = true;
@@ -30,18 +40,43 @@ export default function Home() {
     };
   }, []);
 
+  const filteredOrders =
+    orders?.filter((order) => {
+      if (selectedDepartment === "all") return true;
+      if (!order.parcels) return false;
+      return order.parcels.some((p: any) => p.department === selectedDepartment);
+    }) ?? [];
+
   return (
     <main className="p-8">
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
+
+      <nav className="mb-6 flex gap-2">
+        <button
+          className={`px-3 py-1 rounded ${selectedDepartment === "all" ? "bg-black text-white" : "bg-gray-100"}`}
+          onClick={() => setSelectedDepartment("all")}
+        >
+          All
+        </button>
+        {Object.entries(DEPARTMENT_NAMES).map(([key, label]) => (
+          <button
+            key={key}
+            className={`px-3 py-1 rounded ${selectedDepartment === Number(key) ? "bg-black text-white" : "bg-gray-100"}`}
+            onClick={() => setSelectedDepartment(Number(key))}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
 
       {loading && <p>Loading orders…</p>}
       {error && <p className="text-red-600">Error: {error}</p>}
 
       {!loading && !error && (
         <div>
-          {orders && orders.length > 0 ? (
+          {filteredOrders && filteredOrders.length > 0 ? (
             <ul className="space-y-4">
-              {orders.map((order) => (
+              {filteredOrders.map((order) => (
                 <li key={order.id ?? Math.random()} className="border rounded p-4">
                   <div className="flex items-baseline justify-between">
                     <div>
@@ -57,7 +92,7 @@ export default function Home() {
                     <ul className="mt-3 ml-4 list-disc">
                       {order.parcels.map((p, i) => (
                         <li key={i}>
-                          {p.recipientName ?? "Recipient"} — {p.weight ?? "—"} kg — ${p.value ?? "—"}
+                          {p.recipientName ?? "Recipient"} — {p.weight ?? "—"} kg — ${p.value ?? "—"} — Dept {p.department}
                         </li>
                       ))}
                     </ul>
@@ -66,7 +101,7 @@ export default function Home() {
               ))}
             </ul>
           ) : (
-            <p>No orders found.</p>
+            <p>No orders found for the selected department.</p>
           )}
         </div>
       )}
