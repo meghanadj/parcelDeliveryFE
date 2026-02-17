@@ -9,7 +9,7 @@ export default function SideNav() {
 
   return (
     <div className={styles.sidenav}>
-      <div className={styles.title}>Parcel App</div>
+      <div className={styles.title}>Parcel Manegement System Management System</div>
       <div className={styles.navParams}>
         <Link
           href="/orders"

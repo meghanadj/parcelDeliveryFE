@@ -1,45 +1,88 @@
 .sidenav {
-  width: 250px;
-  background-color: #f4f4f4;
   height: 100vh;
-  padding: 20px;
+  width: 0;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 60px;
   border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 0;
+}
+
+.sidenavOpen {
+  width: 250px;
 }
 
 .title {
-  font-size: 1.5rem;
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #333;
+  display: block;
+  transition: 0.3s;
   font-weight: bold;
   margin-bottom: 2rem;
-  color: #333;
 }
 
 .navParams {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 0 10px;
 }
 
 .link {
+  padding: 8px 8px 8px 32px;
   text-decoration: none;
-  color: #555;
   font-size: 1.1rem;
-  padding: 10px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
   border-radius: 4px;
-  transition: background-color 0.2s, color 0.2s;
 }
 
 .link:hover {
-  background-color: #e0e0e0;
-  color: #000;
+  color: #f1f1f1;
+  background-color: #333;
 }
 
 .active {
-  background-color: #d0d0d0;
   color: #000;
   font-weight: 500;
+  background-color: #d0d0d0;
+}
+
+.closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #333;
+}
+
+.hamburger {
+  font-size: 30px;
+  cursor: pointer;
+  background: rgb(134, 130, 130);
+  border: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 200;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.hamburger:hover {
+  background-color: #e0e0e0;
 }
