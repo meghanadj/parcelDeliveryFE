@@ -4,15 +4,11 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { OrderDTO } from "../lib/apiTypes";
 import { defaultClient } from "../lib/apiClient";
-import { DEPARTMENT_NAMES } from "../lib/constants";
-
-type Department = number | "all";
 
 export default function Home() {
   const [orders, setOrders] = useState<OrderDTO[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDepartment, setSelectedDepartment] = useState<Department>("all");
 
   useEffect(() => {
     let mounted = true;
@@ -35,12 +31,6 @@ export default function Home() {
     };
   }, []);
 
-  const filteredOrders =
-    orders?.filter((order) => {
-      if (selectedDepartment === "all") return true;
-      if (!order.parcels) return false;
-      return order.parcels.some((p: any) => p.department === selectedDepartment);
-    }) ?? [];
 
   return (
     <main className="p-8">
@@ -51,32 +41,14 @@ export default function Home() {
         </Link>
       </div>
 
-      <nav className="mb-6 flex gap-2">
-        <button
-          className={`px-3 py-1 rounded ${selectedDepartment === "all" ? "bg-black text-white" : "bg-gray-100"}`}
-          onClick={() => setSelectedDepartment("all")}
-        >
-          All
-        </button>
-        {Object.entries(DEPARTMENT_NAMES).map(([key, label]) => (
-          <button
-            key={key}
-            className={`px-3 py-1 rounded ${selectedDepartment === Number(key) ? "bg-black text-white" : "bg-gray-100"}`}
-            onClick={() => setSelectedDepartment(Number(key))}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
-
       {loading && <p>Loading orders…</p>}
       {error && <p className="text-red-600">Error: {error}</p>}
 
       {!loading && !error && (
         <div>
-          {filteredOrders && filteredOrders.length > 0 ? (
+          {orders && orders.length > 0 ? (
             <ul className="space-y-4">
-              {filteredOrders.map((order, index) => (
+              {orders.map((order, index) => (
                 <li key={`${order.id ?? "order"}-${index}`} className="border rounded p-4">
                   <div className="flex items-baseline justify-between">
                     <div>
@@ -106,7 +78,7 @@ export default function Home() {
               ))}
             </ul>
           ) : (
-            <p>No orders found for the selected department.</p>
+            <p>No orders found.</p>
           )}
         </div>
       )}
