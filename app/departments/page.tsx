@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { defaultClient } from "@/lib/apiClient";
 import type { DepartmentDTO } from "@/lib/apiTypes";
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function DepartmentsPage() {
   const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
@@ -77,8 +78,15 @@ export default function DepartmentsPage() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Departments</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-semibold">Departments</h1>
 
+        <Link href="/">
+          <button type="button" className="px-3 py-1 rounded border">
+            ← Back to Home
+          </button>
+        </Link>
+      </div>
       {loading && <p className={styles.loading}>Loading departments...</p>}
       {error && <p className={styles.error}>{error}</p>}
 

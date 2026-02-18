@@ -84,21 +84,25 @@ export default function OrderParcelsPage() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Order Parcels</h1>
-      {orderId != null && (
-        <p className={styles.orderId}>Order ID: {orderId}</p>
-      )}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h1 className="text-2xl font-semibold">Order Parcels</h1>
+          {orderId != null && (
+            <p className={styles.orderId}>Order ID: {orderId}</p>
+          )}
+        </div>
+
+        <Link href="/">
+          <button type="button" className="px-3 py-1 rounded border">
+            ← Back to Home
+          </button>
+        </Link>
+      </div>
 
       {loading && <p className={styles.loading}>Loading parcels…</p>}
       {error && (
         <p className={styles.error}>Error: {error}</p>
       )}
-      <div className="flex items-center justify-between mb-4">
-
-        {<Link href="/">
-          <button type="button" className="px-3 py-1 rounded border">← Back to Home</button>
-        </Link>}
-      </div>
       {!loading && !error && (
         <div className={styles.content}>
           <div className={styles.filterContainer}>

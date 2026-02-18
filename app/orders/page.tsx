@@ -35,7 +35,12 @@ export default function OrdersPage() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Orders</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-semibold">Orders</h1>
+        <Link href="/">
+          <button type="button" className="px-3 py-1 rounded border">← Back to Home</button>
+        </Link>
+      </div>
 
       {loading && <p className={styles.loading}>Loading orders…</p>}
       {error && (
